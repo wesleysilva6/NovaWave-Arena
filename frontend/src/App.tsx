@@ -11,6 +11,9 @@ import Mensagens from './pages/mensagens/Index';
 import Notificacoes from './pages/notificacoes/Index';
 import Gastos from './pages/gastos/Index';
 import Configuracoes from './pages/configuracoes/Index';
+import Perfil from './pages/perfil/Index';
+import Funcionarios from './pages/funcionarios/Index';
+import Analises from './pages/analises/Index';
 
 function App() {
   return (
@@ -23,14 +26,17 @@ function App() {
         {/* ROTAS PROTEGIDAS */}
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/analises" element={<Analises />} />
           <Route path="/alunos" element={<Alunos />} />
           <Route path="/modalidades" element={<Modalidades />} />
           <Route path="/turmas" element={<Turmas />} />
           <Route path="/mensalidades" element={<Mensalidades />} />
           <Route path="/gastos" element={<Gastos />} />
+          <Route path="/funcionarios" element={<Funcionarios />} />
           <Route path="/presencas" element={<Presencas />} />
           <Route path="/mensagens" element={<Mensagens />} />
           <Route path="/notificacoes" element={<Notificacoes />} />
+          <Route path="/perfil" element={<Perfil />} />
           <Route path="/configuracoes" element={<Configuracoes />} />
         </Route>
       </Routes>

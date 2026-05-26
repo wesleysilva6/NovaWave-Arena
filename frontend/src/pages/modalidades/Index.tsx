@@ -14,7 +14,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { FiGrid, FiPlus, FiRefreshCw, FiSearch } from 'react-icons/fi'
+import { FiPlus, FiRefreshCw, FiSearch } from 'react-icons/fi'
 
 import {
   listarModalidades,

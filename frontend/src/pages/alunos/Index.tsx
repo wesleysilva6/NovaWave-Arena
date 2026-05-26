@@ -26,6 +26,7 @@ import {
   type Aluno,
   type Modalidade,
 } from '../../service/alunos'
+import { listarTurmas, type Turma } from '../../service/turmas'
 
 import TabelaAlunos from './components/TabelaAlunos'
 import ModalAluno from './components/ModalAluno'
@@ -39,6 +40,7 @@ import { formatPhone } from '../../utils/formatters'
 export default function Alunos() {
   const [alunos, setAlunos] = useState<Aluno[]>([])
   const [modalidades, setModalidades] = useState<Modalidade[]>([])
+  const [turmas, setTurmas] = useState<Turma[]>([])
   const [loading, setLoading] = useState(true)
   const [salvando, setSalvando] = useState(false)
   const [deletando, setDeletando] = useState(false)
@@ -58,12 +60,14 @@ export default function Alunos() {
   const carregarDados = useCallback(async () => {
     try {
       setLoading(true)
-      const [alunosData, modalidadesData] = await Promise.all([
+      const [alunosData, modalidadesData, turmasData] = await Promise.all([
         listarAlunos(),
         listarModalidades(),
+        listarTurmas(),
       ])
       setAlunos(alunosData)
       setModalidades(modalidadesData)
+      setTurmas(turmasData)
     } catch (err) {
       console.error('Erro ao carregar alunos:', err)
     } finally {
@@ -276,6 +280,7 @@ export default function Alunos() {
         onSalvar={handleSalvar}
         aluno={alunoSelecionado}
         modalidades={modalidades}
+        turmas={turmas}
         salvando={salvando}
       />
 

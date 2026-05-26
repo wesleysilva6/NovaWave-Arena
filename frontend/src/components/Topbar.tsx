@@ -39,13 +39,16 @@ import { useNotificacoes, type TipoNotificacao } from '../contexts/NotificacoesC
 
 const routeLabels: Record<string, string> = {
   '/': 'Dashboard',
+  '/analises': 'Análises',
   '/alunos': 'Alunos',
   '/modalidades': 'Modalidades',
   '/turmas': 'Turmas',
   '/mensalidades': 'Mensalidades',
+  '/funcionarios': 'Funcionários',
   '/presencas': 'Presenças',
   '/mensagens': 'Mensagens',
   '/notificacoes': 'Notificações',
+  '/perfil': 'Meu Perfil',
   '/configuracoes': 'Configurações',
 }
 
@@ -270,7 +273,7 @@ export default function TopBar() {
               fontSize="sm"
               color="gray.600"
               _hover={{ bg: 'gray.50' }}
-              onClick={() => navigate('/configuracoes')}
+              onClick={() => navigate('/perfil')}
             >
               Meu perfil
             </MenuItem>

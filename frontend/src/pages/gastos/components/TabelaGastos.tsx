@@ -33,6 +33,7 @@ const categoriaCores: Record<string, string> = {
   'Internet': 'purple',
   'Aluguel': 'red',
   'Salários': 'green',
+  'Salarios': 'green',
   'Marketing': 'pink',
   'Outros': 'gray',
 }

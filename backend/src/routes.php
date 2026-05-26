@@ -13,6 +13,10 @@ use App\Controllers\PresencaController;
 use App\Controllers\MensagemController;
 use App\Controllers\UsuarioController;
 use App\Controllers\GastoController;
+use App\Controllers\ConfiguracaoController;
+use App\Controllers\FuncionarioController;
+use App\Controllers\CargoFuncionarioController;
+use App\Controllers\AnaliseController;
 use App\Infrastructures\Middleware\JwtAuthMiddleware;
 
 // Rotas Públicas (sem autenticação)
@@ -22,6 +26,7 @@ $app->post('/login', LoginController::class . ':login');
 $app->group('', function ($group) {
     // Dashboard
     $group->get('/dashboard', DashboardController::class . ':index');
+    $group->get('/analises', AnaliseController::class . ':index');
 
     // Alunos
     $group->get('/alunos', AlunoController::class . ':listar');
@@ -77,6 +82,8 @@ $app->group('', function ($group) {
     $group->put('/usuario/dados', UsuarioController::class . ':atualizarDados');
     $group->post('/usuario/verificar-senha', UsuarioController::class . ':verificarSenha');
     $group->put('/usuario/senha', UsuarioController::class . ':alterarSenha');
+    $group->get('/configuracoes/valores', ConfiguracaoController::class . ':buscar');
+    $group->put('/configuracoes/valores', ConfiguracaoController::class . ':salvar');
 
     // Gastos
     $group->get('/gastos', GastoController::class . ':listar');
@@ -84,6 +91,16 @@ $app->group('', function ($group) {
     $group->put('/gastos/{id}', GastoController::class . ':editar');
     $group->delete('/gastos/{id}', GastoController::class . ':deletar');
     $group->get('/gastos/resumo', GastoController::class . ':resumoMes');
+
+    // Funcionarios
+    $group->get('/funcionarios', FuncionarioController::class . ':listar');
+    $group->post('/funcionarios', FuncionarioController::class . ':cadastrar');
+    $group->put('/funcionarios/{id}', FuncionarioController::class . ':editar');
+    $group->delete('/funcionarios/{id}', FuncionarioController::class . ':deletar');
+    $group->get('/cargos-funcionarios', CargoFuncionarioController::class . ':listar');
+    $group->post('/cargos-funcionarios', CargoFuncionarioController::class . ':cadastrar');
+    $group->put('/cargos-funcionarios/{id}', CargoFuncionarioController::class . ':editar');
+    $group->delete('/cargos-funcionarios/{id}', CargoFuncionarioController::class . ':deletar');
 
     // Rotas Procedimento
     $group->get('/procedimento', ProcedimentoController::class . ':Listar');

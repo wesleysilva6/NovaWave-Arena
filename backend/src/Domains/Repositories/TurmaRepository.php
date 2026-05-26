@@ -56,4 +56,20 @@ class TurmaRepository
         $params = ['turma_id' => $turma_id, 'aluno_id' => $aluno_id];
         Database::switchParams($params, 'turma/remover_aluno', true);
     }
+
+    public static function removerAlunoDeTodas(int $aluno_id): void
+    {
+        Database::switchParams(['aluno_id' => $aluno_id], 'turma/remover_aluno_todas', true);
+    }
+
+    public static function buscarPorIds(array $ids): array
+    {
+        $ids = array_values(array_unique(array_map('intval', $ids)));
+        if (empty($ids)) {
+            return [];
+        }
+
+        $res = Database::switchParams(['ids' => implode(',', $ids)], 'turma/buscar_por_ids', true);
+        return $res['retorno'] ?? [];
+    }
 }

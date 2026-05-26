@@ -6,6 +6,9 @@ export type Vencimento = {
 }
 
 export type Treino = {
+  data?: string
+  dia_semana?: string
+  dia_iso?: number
   turma: string
   modalidade: string
   horario: string

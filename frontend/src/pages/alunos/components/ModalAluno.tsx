@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import {
   Button,
+  Checkbox,
+  CheckboxGroup,
+  Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   Modal,
@@ -14,11 +18,17 @@ import {
   Select,
   SimpleGrid,
   Switch,
+  Text,
   Textarea,
   VStack,
+  Wrap,
+  WrapItem,
 } from '@chakra-ui/react'
 import type { Aluno, Modalidade } from '../../../service/alunos'
-import { maskPhone, unmaskPhone, maskCPF, unmaskCPF, maskCurrency, unmaskCurrency } from '../../../utils/formatters'
+import { listarTurmasDoAluno } from '../../../service/alunos'
+import type { Turma } from '../../../service/turmas'
+import { buscarValoresConfiguracao } from '../../../service/configuracoes'
+import { maskPhone, unmaskPhone, maskCPF, unmaskCPF, formatCurrency } from '../../../utils/formatters'
 
 interface Props {
   isOpen: boolean
@@ -26,6 +36,7 @@ interface Props {
   onSalvar: (dados: Partial<Aluno>) => Promise<void>
   aluno: Aluno | null
   modalidades: Modalidade[]
+  turmas: Turma[]
   salvando: boolean
 }
 
@@ -46,8 +57,18 @@ function calcularVencimentoContrato(plano: string, dataInicio: string): string {
   return date.toISOString().split('T')[0]
 }
 
-export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, modalidades, salvando }: Props) {
+export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, turmas, salvando }: Props) {
   const [form, setForm] = useState<Partial<Aluno>>({})
+  const [turmasSelecionadas, setTurmasSelecionadas] = useState<string[]>([])
+  const [valorPadrao, setValorPadrao] = useState(0)
+
+  useEffect(() => {
+    if (isOpen) {
+      buscarValoresConfiguracao()
+        .then((data) => setValorPadrao(Number(data.valor_mensalidade ?? 0)))
+        .catch(() => setValorPadrao(0))
+    }
+  }, [isOpen])
 
   useEffect(() => {
     if (aluno) {
@@ -56,6 +77,9 @@ export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, modalidad
         telefone: aluno.telefone || '',
         cpf: aluno.cpf || '',
       })
+      listarTurmasDoAluno(aluno.idaluno)
+        .then((data) => setTurmasSelecionadas(data.map((t) => String(t.idturma))))
+        .catch(() => setTurmasSelecionadas([]))
     } else {
       setForm({
         nome: '',
@@ -68,11 +92,11 @@ export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, modalidad
         notificacao_whatsapp: 1,
         situacao: 1,
         observacao: '',
-        valor_mensalidade: 0,
         plano: 'mensal',
         data_inicio_contrato: '',
         data_vencimento_contrato: '',
       })
+      setTurmasSelecionadas([])
     }
   }, [aluno, isOpen])
 
@@ -88,16 +112,28 @@ export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, modalidad
   }
 
   const handleSubmit = async () => {
+    const primeiraTurma = turmas.find((t) => String(t.idturma) === turmasSelecionadas[0])
     const dados = {
       ...form,
       telefone: unmaskPhone(form.telefone ?? ''),
       cpf: form.cpf ? unmaskCPF(form.cpf) : '',
-      valor_mensalidade: typeof form.valor_mensalidade === 'string'
-        ? unmaskCurrency(form.valor_mensalidade as string)
-        : form.valor_mensalidade,
+      modalidade_id: primeiraTurma?.modalidade_id ?? form.modalidade_id,
+      turmas_ids: turmasSelecionadas.map(Number),
     }
     await onSalvar(dados)
   }
+
+  const totalMensalidade = turmasSelecionadas.reduce((total, id) => {
+    const turma = turmas.find((t) => String(t.idturma) === id)
+    const valorTurma = Number(turma?.valor_mensalidade ?? 0)
+    return total + (valorTurma > 0 ? valorTurma : valorPadrao)
+  }, 0)
+
+  const isValid =
+    !!form.nome?.trim() &&
+    !!form.telefone &&
+    turmasSelecionadas.length > 0 &&
+    !!form.dia_vencimento
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
@@ -162,21 +198,23 @@ export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, modalidad
               </FormControl>
 
               <FormControl isRequired>
-                <FormLabel fontSize="sm" fontWeight="600">Modalidade</FormLabel>
-                <Select
-                  value={form.modalidade_id ?? ''}
-                  onChange={(e) => handleChange('modalidade_id', Number(e.target.value))}
-                  placeholder="Selecione"
-                  size="lg"
-                  rounded="xl"
-                  bg="gray.50"
-                >
-                  {modalidades.map((m) => (
-                    <option key={m.idmodalidade} value={m.idmodalidade}>
-                      {m.nome}
-                    </option>
-                  ))}
-                </Select>
+                <FormLabel fontSize="sm" fontWeight="600">Turmas</FormLabel>
+                <CheckboxGroup value={turmasSelecionadas} onChange={(values) => setTurmasSelecionadas(values as string[])}>
+                  <Wrap spacing={2}>
+                    {turmas.filter((t) => t.situacao === 1).map((turma) => (
+                      <WrapItem key={turma.idturma}>
+                        <Checkbox value={String(turma.idturma)} colorScheme="brand">
+                          <Text as="span" fontSize="sm">
+                            {turma.nome}
+                          </Text>
+                        </Checkbox>
+                      </WrapItem>
+                    ))}
+                  </Wrap>
+                </CheckboxGroup>
+                <FormHelperText>
+                  Turmas sem valor proprio usam o valor padrao das configuracoes.
+                </FormHelperText>
               </FormControl>
 
               <FormControl>
@@ -196,19 +234,20 @@ export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, modalidad
                 </Select>
               </FormControl>
 
-              <FormControl isRequired>
-                <FormLabel fontSize="sm" fontWeight="600">Valor Mensalidade</FormLabel>
-                <Input
-                  value={typeof form.valor_mensalidade === 'number' && form.valor_mensalidade > 0
-                    ? maskCurrency(String(Math.round(form.valor_mensalidade * 100)))
-                    : (form.valor_mensalidade as any) ?? ''}
-                  onChange={(e) => handleChange('valor_mensalidade', e.target.value ? maskCurrency(e.target.value) : '')}
-                  placeholder="0,00"
-                  size="lg"
-                  rounded="xl"
-                  bg="gray.50"
-                />
-              </FormControl>
+              <Flex
+                rounded="xl"
+                bg="brand.50"
+                border="1px solid"
+                borderColor="brand.100"
+                p={4}
+                align="center"
+                justify="space-between"
+              >
+                <Text fontSize="sm" fontWeight="600" color="gray.600">Mensalidade calculada</Text>
+                <Text fontSize="lg" fontWeight="800" color="brand.600">
+                  {formatCurrency(totalMensalidade)}
+                </Text>
+              </Flex>
 
               <FormControl isRequired>
                 <FormLabel fontSize="sm" fontWeight="600">Dia Vencimento</FormLabel>
@@ -296,6 +335,7 @@ export default function ModalAluno({ isOpen, onClose, onSalvar, aluno, modalidad
             colorScheme="brand"
             onClick={handleSubmit}
             isLoading={salvando}
+            isDisabled={!isValid}
             rounded="xl"
             px={8}
           >

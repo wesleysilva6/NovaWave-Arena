@@ -18,6 +18,7 @@ export interface Aluno {
   plano: string
   data_inicio_contrato: string | null
   data_vencimento_contrato: string | null
+  turmas_ids?: number[]
 }
 
 export interface Modalidade {
@@ -31,6 +32,7 @@ export interface TurmaDoAluno {
   horario: string
   dias_semana: string
   professor: string
+  valor_mensalidade: number
   modalidade_nome: string
 }
 
@@ -71,5 +73,6 @@ export async function listarModalidades(): Promise<Modalidade[]> {
 
 export async function listarTurmasDoAluno(id: number): Promise<TurmaDoAluno[]> {
   const res = await http.get(`/alunos/${id}/turmas`)
-  return res.data?.data ?? []
+  const data = res.data?.data ?? []
+  return data.map((t: TurmaDoAluno) => ({ ...t, valor_mensalidade: Number(t.valor_mensalidade ?? 0) }))
 }

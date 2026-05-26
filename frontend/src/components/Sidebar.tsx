@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react'
 import {
   FiHome,
+  FiBarChart2,
   FiUsers,
   FiGrid,
   FiLayers,
@@ -23,6 +24,7 @@ import {
 } from 'react-icons/fi'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import arena from '../assets/arenagestao.png'
 
 interface NavItem {
   label: string
@@ -32,17 +34,20 @@ interface NavItem {
 
 const mainNav: NavItem[] = [
   { label: 'Dashboard', icon: FiHome, path: '/dashboard' },
+  { label: 'Análises', icon: FiBarChart2, path: '/analises' },
   { label: 'Alunos', icon: FiUsers, path: '/alunos' },
   { label: 'Modalidades', icon: FiGrid, path: '/modalidades' },
   { label: 'Turmas', icon: FiLayers, path: '/turmas' },
   { label: 'Mensalidades', icon: FiDollarSign, path: '/mensalidades' },
   { label: 'Gastos', icon: FiTrendingDown, path: '/gastos' },
+  { label: 'Funcionários', icon: FiUsers, path: '/funcionarios' },
   { label: 'Presenças', icon: FiCheckSquare, path: '/presencas' },
 ]
 
 const secondaryNav: NavItem[] = [
   { label: 'Mensagens', icon: FiMessageSquare, path: '/mensagens' },
   { label: 'Notificações', icon: FiBell, path: '/notificacoes' },
+  { label: 'Meu Perfil', icon: FiUsers, path: '/perfil' },
   { label: 'Configurações', icon: FiSettings, path: '/configuracoes' },
 ]
 
@@ -120,8 +125,8 @@ export default function Sidebar() {
         onClick={() => navigate('/')}
       >
         <Image
-          src="/ArenaFitway.jpg"
-          alt="ArenaFitway"
+          src={arena}
+          alt="ArenaGestao"
           w={{ base: '42px', xl: '42px' }}
           h={{ base: '42px', xl: '42px' }}
           rounded="xl"
@@ -135,7 +140,7 @@ export default function Sidebar() {
             color="white"
             lineHeight="1.2"
           >
-            Arena<Text as="span" color="brand.400">Fitway</Text>
+            NovaWave<Text as="span" color="brand.400"> Arena</Text>
           </Text>
           <Text fontSize="xs" color="whiteAlpha.500" fontWeight="400">
             Gestão Esportiva

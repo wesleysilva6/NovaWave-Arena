@@ -41,7 +41,7 @@ class AlunoController extends ControllerBase
         try {
             $body = $this->getRequestBody($request);
 
-            $validationError = $this->validateRequired($body, ['nome', 'telefone', 'modalidade_id', 'dia_vencimento']);
+            $validationError = $this->validateRequired($body, ['nome', 'telefone', 'dia_vencimento']);
             if ($validationError) {
                 return $this->errorResponse($response, $validationError);
             }
@@ -59,7 +59,7 @@ class AlunoController extends ControllerBase
             $idaluno = (int) ($args['id'] ?? 0);
             $body = $this->getRequestBody($request);
 
-            $validationError = $this->validateRequired($body, ['nome', 'telefone', 'modalidade_id', 'dia_vencimento']);
+            $validationError = $this->validateRequired($body, ['nome', 'telefone', 'dia_vencimento']);
             if ($validationError) {
                 return $this->errorResponse($response, $validationError);
             }

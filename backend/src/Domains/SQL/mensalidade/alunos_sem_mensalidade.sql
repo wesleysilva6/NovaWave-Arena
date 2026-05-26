@@ -2,7 +2,8 @@ SELECT
     a.idaluno,
     a.nome,
     a.dia_vencimento,
-    a.valor_mensalidade
+    a.valor_mensalidade,
+    a.data_inicio_contrato
 FROM aluno a
 WHERE a.situacao = 1
   AND NOT EXISTS (

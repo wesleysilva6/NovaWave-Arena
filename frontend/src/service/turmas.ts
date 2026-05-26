@@ -6,8 +6,10 @@ export interface Turma {
   modalidade_id: number
   dias_semana: string
   horario: string
+  professor_id?: number | null
   professor: string | null
   limite_alunos: number | null
+  valor_mensalidade: number
   situacao: number
   criado_em: string
   modalidade_nome: string
@@ -20,8 +22,10 @@ export interface TurmaForm {
   modalidade_id: number
   dias_semana: string
   horario: string
+  professor_id?: number | null
   professor?: string | null
   limite_alunos?: number | null
+  valor_mensalidade: number
   situacao: number
 }
 
@@ -34,7 +38,8 @@ export interface AlunoSimples {
 
 export async function listarTurmas(): Promise<Turma[]> {
   const res = await http.get('/turmas')
-  return res.data?.data ?? []
+  const data = res.data?.data ?? []
+  return data.map((t: Turma) => ({ ...t, valor_mensalidade: Number(t.valor_mensalidade ?? 0) }))
 }
 
 export async function cadastrarTurma(dados: TurmaForm): Promise<any> {

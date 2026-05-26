@@ -19,7 +19,9 @@ class TurmaService
             'dias_semana'   => trim($dados['dias_semana']),
             'horario'       => $dados['horario'],
             'professor'     => isset($dados['professor']) && $dados['professor'] !== '' ? trim($dados['professor']) : null,
+            'professor_id'  => isset($dados['professor_id']) && $dados['professor_id'] !== '' ? (int) $dados['professor_id'] : null,
             'limite_alunos' => isset($dados['limite_alunos']) && $dados['limite_alunos'] !== '' ? (int) $dados['limite_alunos'] : null,
+            'valor_mensalidade' => max(0, (float) ($dados['valor_mensalidade'] ?? 0)),
             'situacao'      => (int) ($dados['situacao'] ?? 1),
         ]);
     }
@@ -33,7 +35,9 @@ class TurmaService
             'dias_semana'   => trim($dados['dias_semana']),
             'horario'       => $dados['horario'],
             'professor'     => isset($dados['professor']) && $dados['professor'] !== '' ? trim($dados['professor']) : null,
+            'professor_id'  => isset($dados['professor_id']) && $dados['professor_id'] !== '' ? (int) $dados['professor_id'] : null,
             'limite_alunos' => isset($dados['limite_alunos']) && $dados['limite_alunos'] !== '' ? (int) $dados['limite_alunos'] : null,
+            'valor_mensalidade' => max(0, (float) ($dados['valor_mensalidade'] ?? 0)),
             'situacao'      => (int) ($dados['situacao'] ?? 1),
         ]);
     }

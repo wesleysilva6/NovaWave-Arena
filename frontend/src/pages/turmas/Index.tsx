@@ -91,8 +91,10 @@ export default function TurmasPage() {
       modalidade_id: t.modalidade_id,
       dias_semana: t.dias_semana,
       horario: t.horario?.slice(0, 5) ?? '',
+      professor_id: t.professor_id ?? '',
       professor: t.professor ?? '',
       limite_alunos: t.limite_alunos ?? '',
+      valor_mensalidade: t.valor_mensalidade ?? '',
       situacao: t.situacao,
     })
     modalForm.onOpen()

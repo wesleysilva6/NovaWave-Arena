@@ -1,8 +1,6 @@
 import {
-  Badge,
   Box,
   Flex,
-  HStack,
   Icon,
   Text,
 } from '@chakra-ui/react'

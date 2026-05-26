@@ -18,7 +18,7 @@ export const CATEGORIAS = [
   'Água',
   'Internet',
   'Aluguel',
-  'Salários',
+  'Salarios',
   'Marketing',
   'Outros',
 ] as const

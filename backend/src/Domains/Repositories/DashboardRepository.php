@@ -23,4 +23,28 @@ class DashboardRepository
         $res = Database::switchParams([], 'dashboard/treinos_hoje', true);
         return $res['retorno'] ?: [];
     }
+
+    public static function buscarAgendaSemana(): array
+    {
+        $res = Database::switchParams([], 'dashboard/agenda_semana', true);
+        return $res['retorno'] ?: [];
+    }
+
+    public static function buscarFinanceiro6Meses(): array
+    {
+        $res = Database::switchParams([], 'dashboard/financeiro_6_meses', true);
+        return $res['retorno'] ?: [];
+    }
+
+    public static function buscarAlunosModalidade(): array
+    {
+        $res = Database::switchParams([], 'dashboard/alunos_modalidade', true);
+        return $res['retorno'] ?: [];
+    }
+
+    public static function buscarAulasPorDia(): array
+    {
+        $res = Database::switchParams([], 'dashboard/aulas_por_dia', true);
+        return $res['retorno'] ?: [];
+    }
 }

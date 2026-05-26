@@ -1,43 +1,34 @@
 import { useEffect, useState } from 'react'
 import { Box, SimpleGrid } from '@chakra-ui/react'
-import {
-  FiUsers,
-  FiCalendar,
-  FiDollarSign,
-  FiAlertTriangle,
-  FiLayers,
-  FiTrendingUp,
-} from 'react-icons/fi'
 
-import { formatCurrency } from '../../utils/formatters'
-import type { Vencimento, Treino, StatCard } from '../../utils/types'
+import type { Vencimento, Treino } from '../../utils/types'
 import { obterDashboard } from '../../service/dashboard'
 
-import StatsGrid from './components/StatsGrid'
 import TabelaVencimentos from './components/TabelaVencimentos'
 import ListaTreinos from './components/ListaTreinos'
+import KpiCards from './components/KpiCards'
+import FinanceiroChart, { type FinanceiroMes } from './components/FinanceiroChart'
+import AulasDiaChart, { type AulasDia } from './components/AulasDiaChart'
+import ModalidadesChart, { type ModalidadeData } from './components/ModalidadesChart'
+import ExecutiveSummary from './components/ExecutiveSummary'
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [proximosVencimentos, setProximosVencimentos] = useState<Vencimento[]>([])
   const [treinosHoje, setTreinosHoje] = useState<Treino[]>([])
+  const [agendaSemana, setAgendaSemana] = useState<Treino[]>([])
+  const [financeiro, setFinanceiro] = useState<FinanceiroMes[]>([])
+  const [alunosModalidade, setAlunosModalidade] = useState<ModalidadeData[]>([])
+  const [aulasPorDia, setAulasPorDia] = useState<AulasDia[]>([])
   const [stats, setStats] = useState({
     total_alunos: 0,
     treinos_hoje: 0,
     receita_mes: 0,
+    gastos_mes: 0,
     vencimentos_proximos: 0,
     modalidades_ativas: 0,
     novos_alunos_mes: 0,
   })
-
-  const statCards: StatCard[] = [
-    { label: 'Total de Alunos',     value: stats.total_alunos,                    icon: FiUsers,        color: 'brand.500', bg: 'brand.50'  },
-    { label: 'Treinos Hoje',        value: stats.treinos_hoje,                    icon: FiCalendar,     color: 'green.500', bg: 'green.50'  },
-    { label: 'Receita do Mês',      value: formatCurrency(stats.receita_mes),     icon: FiDollarSign,   color: 'teal.500',  bg: 'teal.50'   },
-    { label: 'Vencimentos',         value: stats.vencimentos_proximos,            icon: FiAlertTriangle,color: 'orange.500',bg: 'orange.50' },
-    { label: 'Modalidades Ativas',  value: stats.modalidades_ativas,              icon: FiLayers,       color: 'purple.500',bg: 'purple.50' },
-    { label: 'Novos no Mês',        value: `+${stats.novos_alunos_mes}`,          icon: FiTrendingUp,   color: 'cyan.500',  bg: 'cyan.50'   },
-  ]
 
   useEffect(() => {
     async function carregarDados() {
@@ -47,6 +38,10 @@ export default function Dashboard() {
         setStats(data.stats)
         setProximosVencimentos(data.vencimentos ?? [])
         setTreinosHoje(data.treinos_hoje ?? [])
+        setAgendaSemana(data.agenda_semana ?? [])
+        setFinanceiro(data.financeiro_6_meses ?? [])
+        setAlunosModalidade(data.alunos_modalidade ?? [])
+        setAulasPorDia(data.aulas_por_dia ?? [])
       } catch (err) {
         console.error('Erro ao carregar dashboard:', err)
       } finally {
@@ -58,12 +53,32 @@ export default function Dashboard() {
   }, [])
 
   return (
-    <Box p={{ base: 4, md: 6, lg: 8 }} maxW="1400px" w="full" mx="auto">
-      <StatsGrid cards={statCards} loading={loading} />
+    <Box p={{ base: 4, md: 6, lg: 8 }} maxW="1500px" w="full" mx="auto">
+      <ExecutiveSummary
+        receita={stats.receita_mes}
+        gastos={stats.gastos_mes}
+        aulasHoje={stats.treinos_hoje}
+        vencimentos={stats.vencimentos_proximos}
+      />
 
-      <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6}>
+      <KpiCards stats={stats} loading={loading} />
+
+      <SimpleGrid columns={{ base: 1, xl: 3 }} spacing={5} mb={5}>
+        <Box gridColumn={{ base: 'auto', xl: 'span 2' }}>
+          <FinanceiroChart data={financeiro} />
+        </Box>
+        <ModalidadesChart data={alunosModalidade} />
+      </SimpleGrid>
+
+      <SimpleGrid columns={{ base: 1, xl: 3 }} spacing={5}>
+        <AulasDiaChart data={aulasPorDia} />
+        <Box gridColumn={{ base: 'auto', xl: 'span 2' }}>
+          <ListaTreinos treinos={treinosHoje} agendaSemana={agendaSemana} loading={loading} />
+        </Box>
+      </SimpleGrid>
+
+      <SimpleGrid columns={{ base: 1 }} spacing={5} mt={5}>
         <TabelaVencimentos vencimentos={proximosVencimentos} loading={loading} />
-        <ListaTreinos treinos={treinosHoje} loading={loading} />
       </SimpleGrid>
     </Box>
   )

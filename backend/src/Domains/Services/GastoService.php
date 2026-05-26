@@ -3,12 +3,14 @@
 namespace App\Domains\Services;
 
 use App\Domains\Repositories\GastoRepository;
+use App\Domains\Repositories\FuncionarioRepository;
 use Exception;
 
 class GastoService
 {
     public static function listar(): array
     {
+        FuncionarioRepository::sincronizarGastosMesAtual();
         return GastoRepository::listar();
     }
 
@@ -69,6 +71,7 @@ class GastoService
 
     public static function resumoMes(string $mesReferencia): array
     {
+        FuncionarioRepository::sincronizarGastosMesAtual();
         return GastoRepository::resumoMes($mesReferencia);
     }
 }
