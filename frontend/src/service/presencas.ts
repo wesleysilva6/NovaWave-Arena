@@ -5,7 +5,7 @@ export interface Presenca {
   turma_id: number
   aluno_id: number
   data_treino: string   // YYYY-MM-DD
-  situacao: number      // 0 = ausente | 1 = presente
+  situacao: number      // 0 = pendente | 1 = presente | 2 = faltou
   criado_em: string
   aluno_nome: string
 }
@@ -81,10 +81,19 @@ export function formatHorario(horario: string): string {
   return horario.slice(0, 5)
 }
 
+export function hojeLocalISO(): string {
+  const hoje = new Date()
+  const ano = hoje.getFullYear()
+  const mes = String(hoje.getMonth() + 1).padStart(2, '0')
+  const dia = String(hoje.getDate()).padStart(2, '0')
+
+  return `${ano}-${mes}-${dia}`
+}
+
 export function isHoje(data: string): boolean {
-  return data === new Date().toISOString().slice(0, 10)
+  return data === hojeLocalISO()
 }
 
 export function isFutura(data: string): boolean {
-  return data > new Date().toISOString().slice(0, 10)
+  return data > hojeLocalISO()
 }

@@ -49,7 +49,7 @@ class AlunoService
                 $dados['plano'] ?? 'mensal',
                 $valorMensalidade,
                 (int) $dados['dia_vencimento'],
-                $dados['data_inicio_contrato'] ?? null
+                $dados['data_inicio_contrato'] ?? $dados['data_inicio'] ?? date('Y-m-d')
             );
         }
 
@@ -88,7 +88,7 @@ class AlunoService
             $dados['plano'] ?? 'mensal',
             $valorMensalidade,
             (int) $dados['dia_vencimento'],
-            $dados['data_inicio_contrato'] ?? null
+            $dados['data_inicio_contrato'] ?? $dados['data_inicio'] ?? date('Y-m-d')
         );
 
         return $result;
@@ -123,9 +123,13 @@ class AlunoService
 
         $inicio = $dataInicioContrato ? new \DateTime($dataInicioContrato) : new \DateTime();
 
-        for ($i = 0; $i < $totalMeses; $i++) {
+        $geradas = 0;
+        $offset = 0;
+        $limiteBusca = $totalMeses + 12;
+
+        while ($geradas < $totalMeses && $offset < $limiteBusca) {
             $mesReferencia = clone $inicio;
-            $mesReferencia->modify("+{$i} months");
+            $mesReferencia->modify("+{$offset} months");
 
             $ano = (int) $mesReferencia->format('Y');
             $mes = (int) $mesReferencia->format('m');
@@ -142,12 +146,20 @@ class AlunoService
                 $dataInicioContrato
             );
 
+            if ($valorCompetencia <= 0) {
+                $offset++;
+                continue;
+            }
+
             AlunoRepository::gerarMensalidade([
                 'aluno_id' => $alunoId,
                 'valor' => $valorCompetencia,
                 'mes_referencia' => $mesRef,
                 'data_vencimento' => $dataVencimento,
             ]);
+
+            $geradas++;
+            $offset++;
         }
     }
 

@@ -11,47 +11,56 @@ import HorizontalBarChart from './components/HorizontalBarChart'
 import StatusDonut from './components/StatusDonut'
 
 function dataISO(date: Date): string {
-  return date.toISOString().slice(0, 10)
+  const ano = date.getFullYear()
+  const mes = String(date.getMonth() + 1).padStart(2, '0')
+  const dia = String(date.getDate()).padStart(2, '0')
+
+  return `${ano}-${mes}-${dia}`
 }
 
-const hoje = new Date()
-const inicio = new Date(hoje.getFullYear(), hoje.getMonth() - 5, 1)
+function filtrosMesAtual(): AnaliseFiltros {
+  const hoje = new Date()
+  const inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1)
+  const fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0)
 
-const filtrosIniciais: AnaliseFiltros = {
-  data_inicio: dataISO(inicio),
-  data_fim: dataISO(hoje),
-  modalidade_id: 0,
-  aluno_situacao: -1,
+  return {
+    data_inicio: dataISO(inicio),
+    data_fim: dataISO(fim),
+    modalidade_id: 0,
+    aluno_situacao: -1,
+  }
 }
 
-const vazio: AnaliseData = {
-  filtros: filtrosIniciais,
-  resumo: {
-    receita: 0,
-    gastos: 0,
-    resultado: 0,
-    em_aberto: 0,
-    alunos: 0,
-    novos_alunos: 0,
-    presencas_confirmadas: 0,
-    aulas_geradas: 0,
-    taxa_presenca: 0,
-  },
-  financeiro_mensal: [],
-  gastos_categoria: [],
-  mensalidades_status: [],
-  alunos_modalidade: [],
-  presencas_modalidade: [],
-  aulas_dia_semana: [],
-  turmas_ocupacao: [],
+function dadosVazios(filtros: AnaliseFiltros): AnaliseData {
+  return {
+    filtros,
+    resumo: {
+      receita: 0,
+      gastos: 0,
+      resultado: 0,
+      em_aberto: 0,
+      alunos: 0,
+      novos_alunos: 0,
+      presencas_confirmadas: 0,
+      aulas_geradas: 0,
+      taxa_presenca: 0,
+    },
+    financeiro_mensal: [],
+    gastos_categoria: [],
+    mensalidades_status: [],
+    alunos_modalidade: [],
+    presencas_modalidade: [],
+    aulas_dia_semana: [],
+    turmas_ocupacao: [],
+  }
 }
 
 export default function AnalisesPage() {
   const toast = useToast()
   const [loading, setLoading] = useState(true)
   const [modalidades, setModalidades] = useState<Modalidade[]>([])
-  const [filtros, setFiltros] = useState<AnaliseFiltros>(filtrosIniciais)
-  const [dados, setDados] = useState<AnaliseData>(vazio)
+  const [filtros, setFiltros] = useState<AnaliseFiltros>(() => filtrosMesAtual())
+  const [dados, setDados] = useState<AnaliseData>(() => dadosVazios(filtrosMesAtual()))
 
   const carregar = useCallback(async () => {
     try {
@@ -124,8 +133,8 @@ export default function AnalisesPage() {
       <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={5}>
         <HorizontalBarChart
           title="Aulas por dia da semana"
-          subtitle="Comparativo entre dias de maior movimento"
-          data={dados.aulas_dia_semana.map((d) => ({ label: d.dia_semana, value: d.aulas_geradas, sub: `${d.presencas} presencas` }))}
+          subtitle="Quantidade de aulas previstas no periodo"
+          data={dados.aulas_dia_semana.map((d) => ({ label: d.dia_semana, value: d.aulas_geradas, sub: `${d.presencas} turma${d.presencas !== 1 ? 's' : ''} ativa${d.presencas !== 1 ? 's' : ''}` }))}
         />
         <HorizontalBarChart
           title="Ocupacao das turmas"

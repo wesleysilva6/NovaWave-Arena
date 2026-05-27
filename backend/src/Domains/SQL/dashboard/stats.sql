@@ -16,7 +16,7 @@ SELECT
     (SELECT COALESCE(SUM(m.valor), 0)
        FROM mensalidade m
        WHERE m.situacao = 1
-         AND TO_CHAR(m.data_pagamento, 'YYYY-MM') = TO_CHAR(CURRENT_DATE, 'YYYY-MM')
+         AND m.mes_referencia = TO_CHAR(CURRENT_DATE, 'YYYY-MM')
     ) AS receita_mes,
     (SELECT COUNT(*)
        FROM mensalidade m

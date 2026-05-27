@@ -59,7 +59,7 @@ class AnaliseRepository
 
     public static function aulasDiaSemana(array $params): array
     {
-        return self::rows(Database::switchParams($params, 'analise/aulas_dia_semana', true));
+        return self::rows(Database::switchParams(self::pick($params, ['modalidade_id']), 'analise/aulas_dia_semana', true));
     }
 
     public static function turmasOcupacao(array $params): array

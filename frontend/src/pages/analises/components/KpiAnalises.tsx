@@ -10,7 +10,7 @@ interface Props {
 
 export default function KpiAnalises({ resumo, loading }: Props) {
   const cards = [
-    { label: 'Receita', value: formatCurrency(resumo.receita), sub: 'pagamentos recebidos', icon: FiDollarSign, bg: 'green.50', color: 'green.500' },
+    { label: 'Receita', value: formatCurrency(resumo.receita), sub: 'por competencia', icon: FiDollarSign, bg: 'green.50', color: 'green.500' },
     { label: 'Despesas', value: formatCurrency(resumo.gastos), sub: 'custos no periodo', icon: FiTrendingDown, bg: 'red.50', color: 'red.500' },
     { label: 'Resultado', value: formatCurrency(resumo.resultado), sub: resumo.resultado >= 0 ? 'saldo positivo' : 'saldo negativo', icon: FiTrendingUp, bg: resumo.resultado >= 0 ? 'cyan.50' : 'red.50', color: resumo.resultado >= 0 ? 'cyan.500' : 'red.500' },
     { label: 'Em aberto', value: formatCurrency(resumo.em_aberto), sub: 'mensalidades pendentes', icon: FiClock, bg: 'orange.50', color: 'orange.500' },

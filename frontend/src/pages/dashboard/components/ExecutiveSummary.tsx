@@ -29,7 +29,7 @@ export default function ExecutiveSummary({ receita, gastos, aulasHoje, venciment
       <Box>
         <Text fontSize="xs" color="whiteAlpha.700" fontWeight="700" textTransform="uppercase">Visao executiva</Text>
         <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight="900" lineHeight="1.1" mt={1}>
-          {resultado >= 0 ? 'Operacao com saldo positivo' : 'Atencao ao saldo do mes'}
+          {resultado >= 0 ? 'Operação com saldo positivo' : 'Atenção ao saldo do mês'}
         </Text>
         <Text color="whiteAlpha.700" fontSize="sm" mt={2}>
           Hoje existem {aulasHoje} aula{aulasHoje !== 1 ? 's' : ''} e {vencimentos} mensalidade{vencimentos !== 1 ? 's' : ''} perto do vencimento.
@@ -45,7 +45,7 @@ export default function ExecutiveSummary({ receita, gastos, aulasHoje, venciment
           Mensalidades
         </Button>
         <Button leftIcon={<FiCalendar />} rounded="xl" bg="white" color="brand.600" _hover={{ bg: 'whiteAlpha.900' }} onClick={() => navigate('/presencas')}>
-          Agenda
+          Agendas
         </Button>
       </HStack>
     </Flex>

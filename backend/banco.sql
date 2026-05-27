@@ -205,7 +205,7 @@ CREATE TABLE IF NOT EXISTS presenca (
   aluno_id integer NOT NULL,
   turma_id integer NOT NULL,
   data_treino date NOT NULL,
-  situacao smallint NOT NULL DEFAULT 1 CHECK (situacao IN (0,1)),
+  situacao smallint NOT NULL DEFAULT 0 CHECK (situacao IN (0,1,2)),
   criado_em timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_presenca_aluno
     FOREIGN KEY (aluno_id) REFERENCES aluno(idaluno)
@@ -215,3 +215,6 @@ CREATE TABLE IF NOT EXISTS presenca (
     ON UPDATE CASCADE ON DELETE CASCADE,
   CONSTRAINT uq_presenca UNIQUE (aluno_id, turma_id, data_treino)
 );
+
+ALTER TABLE IF EXISTS presenca DROP CONSTRAINT IF EXISTS presenca_situacao_check;
+ALTER TABLE IF EXISTS presenca ADD CONSTRAINT presenca_situacao_check CHECK (situacao IN (0,1,2));

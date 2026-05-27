@@ -76,12 +76,14 @@ class AnaliseService
 
     private static function normalizarFiltros(array $query): array
     {
-        $fim = $query['data_fim'] ?? date('Y-m-d');
-        $inicio = $query['data_inicio'] ?? date('Y-m-d', strtotime('-5 months'));
+        $inicioMesAtual = date('Y-m-01');
+        $fimMesAtual = date('Y-m-t');
+        $fim = $query['data_fim'] ?? $fimMesAtual;
+        $inicio = $query['data_inicio'] ?? $inicioMesAtual;
 
         return [
-            'data_inicio' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $inicio) ? $inicio : date('Y-m-d', strtotime('-5 months')),
-            'data_fim' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $fim) ? $fim : date('Y-m-d'),
+            'data_inicio' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $inicio) ? $inicio : $inicioMesAtual,
+            'data_fim' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $fim) ? $fim : $fimMesAtual,
             'modalidade_id' => (int) ($query['modalidade_id'] ?? 0),
             'aluno_situacao' => (int) ($query['aluno_situacao'] ?? -1),
         ];

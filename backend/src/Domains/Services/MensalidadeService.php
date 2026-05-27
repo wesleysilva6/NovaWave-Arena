@@ -39,6 +39,10 @@ class MensalidadeService
                 $aluno['data_inicio_contrato'] ?? null
             );
 
+            if ($valor <= 0) {
+                continue;
+            }
+
             MensalidadeRepository::gerarMensalidade([
                 'aluno_id'       => (int) $aluno['idaluno'],
                 'valor'          => $valor,

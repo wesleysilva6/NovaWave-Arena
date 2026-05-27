@@ -1,145 +1,172 @@
-# NovaWave - Arena — Frontend
+# NovaWave - Arena - Frontend
 
-Aplicação web SPA desenvolvida em React 19 com TypeScript, Vite e Chakra UI para gestão de arenas esportivas. Consome a API RESTful do backend e integra com o serviço WhatsApp.
+Aplicacao web SPA desenvolvida em React 19 com TypeScript, Vite e Chakra UI para gestao de arenas esportivas. Consome a API RESTful do backend e integra com o servico WhatsApp.
 
 ## Arquitetura
 
 ```
 src/
-├── pages/                  # Páginas organizadas por módulo
-│   ├── dashboard/          # Painel com métricas e vencimentos
-│   ├── alunos/             # CRUD de alunos (7 componentes)
+├── pages/                  # Paginas organizadas por modulo
+│   ├── dashboard/          # Painel com metricas, graficos e vencimentos
+│   ├── analises/           # Visao gerencial com filtros avancados
+│   ├── alunos/             # CRUD de alunos, turmas e historico de presencas
 │   ├── modalidades/        # CRUD de modalidades
-│   ├── turmas/             # CRUD de turmas + matrícula
-│   ├── mensalidades/       # Gestão de mensalidades
+│   ├── turmas/             # CRUD de turmas + matricula + professor
+│   ├── mensalidades/       # Gestao de mensalidades por competencia
 │   ├── gastos/             # Controle de despesas
-│   ├── presencas/          # Controle de presenças
+│   ├── funcionarios/       # Gestao de funcionarios, cargos e salarios
+│   ├── presencas/          # Controle de presencas e faltas
 │   ├── mensagens/          # Envio de mensagens WhatsApp
-│   ├── notificacoes/       # Centro de notificações
-│   ├── configuracoes/      # Perfil e segurança
-│   └── login/              # Autenticação
+│   ├── notificacoes/       # Centro de notificacoes
+│   ├── configuracoes/      # Valores globais e cargos
+│   ├── perfil/             # Dados basicos do usuario e senha
+│   └── login/              # Autenticacao
 ├── components/             # Componentes globais
-│   ├── Sidebar.tsx         # Menu lateral com navegação
-│   ├── Topbar.tsx          # Barra superior com notificações
+│   ├── Sidebar.tsx         # Menu lateral com navegacao
+│   ├── Topbar.tsx          # Barra superior com notificacoes
 │   └── AppLayout.tsx       # Layout principal (Sidebar + Topbar + Outlet)
 ├── contexts/               # Contextos React
-│   ├── AuthContext.tsx     # Autenticação JWT (login, logout, user)
-│   └── NotificacoesContext.tsx  # Notificações em tempo real
-├── service/                # Camada HTTP — única responsável por acessar a API
-│   ├── http.ts             # Instância Axios, token JWT, interceptors
+│   ├── AuthContext.tsx     # Autenticacao JWT (login, logout, user)
+│   └── NotificacoesContext.tsx  # Notificacoes em tempo real
+├── service/                # Camada HTTP unica responsavel por acessar a API
+│   ├── http.ts             # Instancia Axios, token JWT, interceptors
 │   ├── auth.ts             # Login
 │   ├── dashboard.ts        # Dados do dashboard
+│   ├── analises.ts         # Dados gerenciais e filtros
 │   ├── alunos.ts           # CRUD alunos + modalidades
+│   ├── cargosFuncionarios.ts # CRUD de cargos de funcionarios
+│   ├── configuracoes.ts    # Valores globais da arena
+│   ├── funcionarios.ts     # CRUD funcionarios
 │   ├── modalidades.ts      # CRUD modalidades
-│   ├── turmas.ts           # CRUD turmas + matrícula
-│   ├── mensalidades.ts     # Mensalidades + geração
+│   ├── turmas.ts           # CRUD turmas + matricula
+│   ├── mensalidades.ts     # Mensalidades + geracao
 │   ├── gastos.ts           # CRUD gastos + resumo
-│   ├── presencas.ts        # Presenças por turma/aluno
+│   ├── presencas.ts        # Presencas por turma/aluno
 │   ├── mensagens.ts        # Mensagens + grupos WhatsApp
-│   ├── usuario.ts          # Perfil + alteração de senha
+│   ├── usuario.ts          # Perfil + alteracao de senha
 │   └── whatsapp.ts         # Cliente SSE do WhatsApp Service
 ├── utils/
-│   ├── formatters.ts       # Formatação de CPF, telefone, moeda, data
-│   ├── alertas.ts          # Alertas e confirmações (SweetAlert2)
+│   ├── formatters.ts       # Formatacao de CPF, telefone, moeda, data
+│   ├── alertas.ts          # Alertas e confirmacoes (SweetAlert2)
 │   └── types.ts            # Tipos compartilhados
 ├── theme/
 │   └── index.ts            # Tema Chakra UI (cor brand: #1890FF)
-├── AuthLayout.tsx          # Layout para rotas públicas
+├── AuthLayout.tsx          # Layout para rotas publicas
 ├── ProtectedLayout.tsx     # Layout protegido (valida JWT)
-├── App.tsx                 # Definição de rotas
+├── App.tsx                 # Definicao de rotas
 └── main.tsx                # Entry point
 ```
 
-### Padrões utilizados
+### Padroes utilizados
 
-- **Service Layer** — toda comunicação HTTP centralizada em `service/`
-- **Protected Routes** — `ProtectedLayout` valida JWT antes de renderizar
-- **Component Composition** — cada página composta por componentes na pasta `components/`
-- **Context API** — estado global de autenticação e notificações
-- **Formatters centralizados** — `utils/formatters.ts` com máscaras de CPF, telefone e moeda
+- **Service Layer** - toda comunicacao HTTP centralizada em `service/`
+- **Protected Routes** - `ProtectedLayout` valida JWT antes de renderizar
+- **Component Composition** - cada pagina composta por componentes na pasta `components/`
+- **Context API** - estado global de autenticacao e notificacoes
+- **Formatters centralizados** - `utils/formatters.ts` com mascaras de CPF, telefone, moeda e formatos de exibicao
 
 ## Tecnologias
 
 | Tecnologia | Uso |
 |-----------|-----|
 | React 19 | Framework UI |
-| TypeScript 5.9 | Tipagem estática |
+| TypeScript 5.9 | Tipagem estatica |
 | Vite 7 | Build tool e dev server |
 | Chakra UI 2 | Design system e componentes |
 | React Router 7 | Roteamento SPA |
 | Axios | Cliente HTTP |
-| Framer Motion | Animações |
-| ExcelJS | Exportação para Excel |
-| jsPDF | Geração de PDFs |
-| date-fns | Manipulação de datas |
-| SweetAlert2 | Alertas e confirmações |
+| Framer Motion | Animacoes |
+| ExcelJS | Exportacao para Excel |
+| jsPDF | Geracao de PDFs |
+| date-fns | Manipulacao de datas |
+| SweetAlert2 | Alertas e confirmacoes |
 
-## Rotas da Aplicação
+## Rotas da Aplicacao
 
-### Públicas
+### Publicas
 
-| Rota | Página | Descrição |
+| Rota | Pagina | Descricao |
 |------|--------|-----------|
 | `/` | Login | Redirecionamento para login |
-| `/login` | Login | Autenticação com email e senha |
+| `/login` | Login | Autenticacao com email e senha |
 
-### Protegidas (requerem JWT válido)
+### Protegidas (requerem JWT valido)
 
-| Rota | Página | Descrição |
+| Rota | Pagina | Descricao |
 |------|--------|-----------|
-| `/dashboard` | Dashboard | Métricas, receita, vencimentos |
-| `/alunos` | Alunos | Cadastro e gestão de alunos |
+| `/dashboard` | Dashboard | Metricas, graficos, receita e vencimentos |
+| `/analises` | Analises | KPIs, filtros avancados e graficos dinamicos |
+| `/alunos` | Alunos | Cadastro e gestao de alunos |
 | `/modalidades` | Modalidades | Gerenciamento de modalidades |
-| `/turmas` | Turmas | Turmas, horários e matrículas |
-| `/mensalidades` | Mensalidades | Cobrança e confirmação de pagamento |
+| `/turmas` | Turmas | Turmas, horarios, professores e matriculas |
+| `/mensalidades` | Mensalidades | Cobranca por competencia e confirmacao de pagamento |
 | `/gastos` | Gastos | Registro de despesas por categoria |
-| `/presencas` | Presenças | Controle de frequência |
+| `/funcionarios` | Funcionarios | Cadastro de funcionarios, cargos e salarios |
+| `/presencas` | Presencas | Controle de frequencia, faltas e pendencias |
 | `/mensagens` | Mensagens | Envio WhatsApp individual/em massa |
-| `/notificacoes` | Notificações | Alertas de vencimentos e pendências |
-| `/configuracoes` | Configurações | Perfil, email e senha |
+| `/notificacoes` | Notificacoes | Alertas de vencimentos e pendencias |
+| `/perfil` | Meu Perfil | Dados basicos do usuario e senha |
+| `/configuracoes` | Configuracoes | Valores globais da arena e cargos |
 
 ## Camada de Service
 
-Nenhuma página faz requisições HTTP diretamente. Toda comunicação passa pela pasta `service/`:
+Nenhuma pagina faz requisicoes HTTP diretamente. Toda comunicacao passa pela pasta `service/`:
 
 | Arquivo | Responsabilidade |
 |---------|-----------------|
-| `http.ts` | Instância Axios, JWT helpers (save/get/clear/validate), interceptors |
+| `http.ts` | Instancia Axios, JWT helpers (save/get/clear/validate), interceptors |
 | `auth.ts` | `POST /login` |
 | `dashboard.ts` | `GET /dashboard` |
+| `analises.ts` | `GET /analises` com filtros de periodo, modalidade e situacao |
 | `alunos.ts` | CRUD alunos, listagem de modalidades, turmas por aluno |
+| `cargosFuncionarios.ts` | CRUD de cargos de funcionarios |
+| `configuracoes.ts` | Valores gerais da arena |
+| `funcionarios.ts` | CRUD funcionarios |
 | `modalidades.ts` | CRUD modalidades, toggle status |
-| `turmas.ts` | CRUD turmas, matrícula/remoção de alunos |
-| `mensalidades.ts` | Listagem, confirmação, geração mensal |
+| `turmas.ts` | CRUD turmas, matricula/remocao de alunos |
+| `mensalidades.ts` | Listagem, confirmacao, geracao mensal |
 | `gastos.ts` | CRUD gastos, resumo mensal por categoria |
-| `presencas.ts` | Listagem por turma/aluno, marcação de presença |
-| `mensagens.ts` | Histórico, envio, grupos WhatsApp, templates |
-| `usuario.ts` | Perfil, atualização de dados, alteração de senha |
+| `presencas.ts` | Listagem por turma/aluno, marcacao de presenca/falta |
+| `mensagens.ts` | Historico, envio, grupos WhatsApp, templates |
+| `usuario.ts` | Perfil, atualizacao de dados, alteracao de senha |
 | `whatsapp.ts` | SSE (status/QR), connect, disconnect, send, send-bulk |
+
+## Funcionalidades Recentes
+
+- Dashboard redesenhada com graficos interativos e indicadores financeiros.
+- Tela de analises com filtro inicial no mes atual, do primeiro ao ultimo dia.
+- Grafico "Aulas por dia da semana" baseado na quantidade de turmas/aulas cadastradas por dia.
+- Mensalidades por competencia, com pagamento antecipado entrando na receita do mes correto.
+- Mensalidade proporcional para entrada no meio do mes e bloqueio de cobranca quando nao ha aula no periodo.
+- Presencas com status pendente, presente e faltou, respeitando a data de entrada do aluno.
+- Historico de presencas do aluno com faltas visiveis para reposicao.
+- Gestao de funcionarios com salarios integrados aos gastos.
+- Cadastro de cargos em configuracoes e vinculacao de professores nas turmas.
+- Separacao entre Meu Perfil e Configuracoes.
 
 ## Formatadores (`utils/formatters.ts`)
 
-| Função | Descrição | Exemplo |
+| Funcao | Descricao | Exemplo |
 |--------|-----------|---------|
-| `formatCurrency(value)` | Exibição de moeda | `R$ 1.234,56` |
-| `maskCurrency(value)` | Máscara de input monetário | `1.234,56` |
-| `unmaskCurrency(value)` | Converte máscara para `number` | `1234.56` |
-| `formatCPF(cpf)` | Exibição de CPF | `123.456.789-00` |
-| `maskCPF(value)` | Máscara de input CPF | `123.456.789-00` |
-| `unmaskCPF(value)` | Remove máscara | `12345678900` |
-| `formatPhone(phone)` | Exibição de telefone | `(11) 99999-0000` |
-| `maskPhone(value)` | Máscara de input telefone | `(11) 99999-0000` |
-| `unmaskPhone(value)` | Remove máscara | `11999990000` |
-| `formatDate(dateStr)` | Exibição de data | `12/04/2026` |
+| `formatCurrency(value)` | Exibicao de moeda | `R$ 1.234,56` |
+| `maskCurrency(value)` | Mascara de input monetario | `1.234,56` |
+| `unmaskCurrency(value)` | Converte mascara para `number` | `1234.56` |
+| `formatCPF(cpf)` | Exibicao de CPF | `123.456.789-00` |
+| `maskCPF(value)` | Mascara de input CPF | `123.456.789-00` |
+| `unmaskCPF(value)` | Remove mascara | `12345678900` |
+| `formatPhone(phone)` | Exibicao de telefone | `(11) 99999-0000` |
+| `maskPhone(value)` | Mascara de input telefone | `(11) 99999-0000` |
+| `unmaskPhone(value)` | Remove mascara | `11999990000` |
+| `formatDate(dateStr)` | Exibicao de data | `12/04/2026` |
 
-## Fluxo de Autenticação
+## Fluxo de Autenticacao
 
-1. Usuário envia email + senha em `/login`
-2. `auth.ts` faz `POST /login` → backend retorna JWT
+1. Usuario envia email + senha em `/login`
+2. `auth.ts` faz `POST /login`; backend retorna JWT
 3. Token salvo no localStorage via `http.ts`
-4. `ProtectedLayout` valida o token a cada navegação
-5. Token expirado → redirecionamento automático para `/login`
-6. Axios interceptor injeta `Authorization: Bearer <token>` em todas as requisições
+4. `ProtectedLayout` valida o token a cada navegacao
+5. Token expirado redireciona automaticamente para `/login`
+6. Axios interceptor injeta `Authorization: Bearer <token>` em todas as requisicoes
 
 ## Como Executar
 
@@ -147,31 +174,31 @@ Nenhuma página faz requisições HTTP diretamente. Toda comunicação passa pel
 
 ```bash
 cd frontend
-npm install       # ou yarn install
+npm install
 npm run dev       # http://localhost:5173
 ```
 
-### Produção com Docker
+### Producao com Docker
 
 ```bash
 cd frontend
 docker compose up -d    # http://localhost:3000
 ```
 
-### Scripts disponíveis
+### Scripts disponiveis
 
-| Script | Descrição |
+| Script | Descricao |
 |--------|-----------|
 | `npm run dev` | Servidor de desenvolvimento (Vite) |
-| `npm run build` | Build de produção |
+| `npm run build` | Build de producao |
 | `npm run preview` | Preview do build |
-| `npm run lint` | Verificação ESLint |
-| `npm run lint:fix` | Correção automática ESLint |
-| `npm run format` | Formatação Prettier |
+| `npm run lint` | Verificacao ESLint |
+| `npm run lint:fix` | Correcao automatica ESLint |
+| `npm run format` | Formatacao Prettier |
 
-## Variáveis de Ambiente
+## Variaveis de Ambiente
 
-| Variável | Descrição | Padrão |
+| Variavel | Descricao | Padrao |
 |----------|-----------|--------|
 | `VITE_API_BASE_URL` | URL da API backend | `http://localhost:8085` |
 | `VITE_WA_BASE_URL` | URL do WhatsApp Service | `http://localhost:3001` |

@@ -78,10 +78,11 @@ export default function ModalPresencasAluno({ isOpen, onClose, aluno }: Props) {
     return [...map.values()].sort((a, b) => a.turma_nome.localeCompare(b.turma_nome))
   }, [presencas])
 
-  const totalAulas = presencas.length
+  const totalResolvidas = presencas.filter((p) => p.situacao === 1 || p.situacao === 2).length
   const totalPresente = presencas.filter((p) => p.situacao === 1).length
-  const totalFalta = presencas.filter((p) => p.situacao === 0).length
-  const pct = totalAulas > 0 ? Math.round((totalPresente / totalAulas) * 100) : 0
+  const totalFalta = presencas.filter((p) => p.situacao === 2).length
+  const totalPendente = presencas.filter((p) => p.situacao === 0).length
+  const pct = totalResolvidas > 0 ? Math.round((totalPresente / totalResolvidas) * 100) : 0
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
@@ -133,7 +134,7 @@ export default function ModalPresencasAluno({ isOpen, onClose, aluno }: Props) {
                     Taxa de frequência
                   </Text>
                   <Text fontSize="xs" color="gray.400">
-                    {totalAulas} aula{totalAulas !== 1 ? 's' : ''} registrada{totalAulas !== 1 ? 's' : ''}
+                    {totalResolvidas} aula{totalResolvidas !== 1 ? 's' : ''} resolvida{totalResolvidas !== 1 ? 's' : ''}
                   </Text>
                 </VStack>
                 <HStack spacing={3}>
@@ -149,16 +150,23 @@ export default function ModalPresencasAluno({ isOpen, onClose, aluno }: Props) {
                       <Text fontSize="sm" fontWeight="700" color="red.600">{totalFalta}</Text>
                     </HStack>
                   </Tooltip>
+                  <Tooltip label="Pendentes">
+                    <HStack spacing={1}>
+                      <Icon as={FiAlertCircle} color="gray.400" boxSize={4} />
+                      <Text fontSize="sm" fontWeight="700" color="gray.500">{totalPendente}</Text>
+                    </HStack>
+                  </Tooltip>
                 </HStack>
               </Flex>
 
               {/* Por turma */}
               <VStack spacing={4} align="stretch">
                 {porTurma.map((grupo) => {
-                  const gTotal = grupo.itens.length
                   const gPresente = grupo.itens.filter((p) => p.situacao === 1).length
-                  const gFalta = gTotal - gPresente
-                  const gPct = gTotal > 0 ? Math.round((gPresente / gTotal) * 100) : 0
+                  const gFalta = grupo.itens.filter((p) => p.situacao === 2).length
+                  const gPendente = grupo.itens.filter((p) => p.situacao === 0).length
+                  const gResolvidas = gPresente + gFalta
+                  const gPct = gResolvidas > 0 ? Math.round((gPresente / gResolvidas) * 100) : 0
 
                   return (
                     <Box key={grupo.turma_nome} border="1px solid" borderColor="gray.100" rounded="xl" overflow="hidden">
@@ -193,6 +201,12 @@ export default function ModalPresencasAluno({ isOpen, onClose, aluno }: Props) {
                             <Icon as={FiXCircle} color="red.400" boxSize={3.5} />
                             <Text fontSize="xs" fontWeight="700" color="red.600">{gFalta}</Text>
                           </HStack>
+                          {gPendente > 0 && (
+                            <HStack spacing={1}>
+                              <Icon as={FiAlertCircle} color="gray.400" boxSize={3.5} />
+                              <Text fontSize="xs" fontWeight="700" color="gray.500">{gPendente}</Text>
+                            </HStack>
+                          )}
                           <Badge
                             colorScheme={gPct >= 75 ? 'green' : gPct >= 50 ? 'yellow' : 'red'}
                             rounded="full"
@@ -217,8 +231,8 @@ export default function ModalPresencasAluno({ isOpen, onClose, aluno }: Props) {
                             borderColor="gray.50"
                           >
                             <Icon
-                              as={p.situacao === 1 ? FiCheckCircle : FiAlertCircle}
-                              color={p.situacao === 1 ? 'green.400' : 'red.400'}
+                              as={p.situacao === 1 ? FiCheckCircle : p.situacao === 2 ? FiXCircle : FiAlertCircle}
+                              color={p.situacao === 1 ? 'green.400' : p.situacao === 2 ? 'red.400' : 'gray.400'}
                               boxSize={4}
                               flexShrink={0}
                             />
@@ -226,12 +240,12 @@ export default function ModalPresencasAluno({ isOpen, onClose, aluno }: Props) {
                               {formatDataCurta(p.data_treino)}
                             </Text>
                             <Badge
-                              colorScheme={p.situacao === 1 ? 'green' : 'red'}
+                              colorScheme={p.situacao === 1 ? 'green' : p.situacao === 2 ? 'red' : 'gray'}
                               rounded="full"
                               fontSize="xs"
                               variant="subtle"
                             >
-                              {p.situacao === 1 ? 'Presente' : 'Falta'}
+                              {p.situacao === 1 ? 'Presente' : p.situacao === 2 ? 'Falta' : 'Pendente'}
                             </Badge>
                           </Flex>
                         ))}

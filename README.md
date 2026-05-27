@@ -26,9 +26,12 @@ Desenvolvido com foco em praticidade e experiencia do usuario, ele centraliza tu
 - Turmas, modalidades e controle de matriculas
 - Mensalidades e gestao financeira de gastos
 - Registro de presencas por turma e data
+- Dashboard profissional com graficos gerenciais
+- Tela de analises com filtros avancados
+- Gestao de funcionarios, cargos e custos recorrentes
 - Envio de mensagens via WhatsApp com templates prontos
 - Notificacoes automaticas de vencimentos
-- Configuracoes de perfil e senha
+- Perfil separado de configuracoes gerais da arena
 
 ---
 
@@ -77,12 +80,15 @@ Desenvolvido com foco em praticidade e experiencia do usuario, ele centraliza tu
 - **Alunos** -- cadastro completo com CPF, telefone, contrato e matricula em turmas
 - **Modalidades** -- CRUD de modalidades esportivas com ativacao/desativacao
 - **Turmas** -- vinculadas a modalidades, com dias, horarios, professor e vagas
-- **Mensalidades** -- geracao automatica, confirmacao de pagamento, filtros por status
+- **Mensalidades** -- geracao automatica por competencia, proporcional por aulas e confirmacao de pagamento
 - **Gastos** -- registro de despesas por categoria com resumo mensal
-- **Presencas** -- marcacao por turma e data, historico por aluno
+- **Funcionarios** -- cadastro de colaboradores, cargos e salarios refletidos em gastos
+- **Presencas** -- marcacao por turma e data, status presente/faltou/pendente e historico por aluno
+- **Analises** -- visao gerencial com KPIs, graficos dinamicos e filtros por periodo/modalidade
 - **Mensagens** -- envio via WhatsApp com templates, QR Code e historico
 - **Notificacoes** -- alertas automaticos de vencimentos proximos e atrasados
-- **Configuracoes** -- edicao de perfil e alteracao de senha
+- **Perfil** -- dados basicos do usuario e alteracao de senha
+- **Configuracoes** -- valores globais da arena e cadastro de cargos
 
 ---
 
@@ -142,6 +148,8 @@ node index.js            # http://localhost:3001
 | mensalidade | Mensalidades (pendente, pago, atrasada) |
 | presenca | Registro de presenca por aluno/turma/data |
 | gasto | Despesas da arena por categoria |
+| funcionario | Funcionarios, cargos, salarios e dados de contato |
+| cargo_funcionario | Cargos usados no cadastro de funcionarios |
 | mensagem | Historico de mensagens enviadas |
 | grupo_whatsapp | Grupos WhatsApp cadastrados |
 | notificacao | Notificacoes do sistema |
@@ -151,18 +159,24 @@ node index.js            # http://localhost:3001
 
 ## Roadmap
 
-- [x] Dashboard com metricas em tempo real
-- [x] CRUD completo de Alunos, Turmas e Modalidades
-- [x] Controle de Mensalidades com geracao automatica
-- [x] Registro de Presencas
-- [x] Gestao de Gastos por categoria
-- [x] Integracao WhatsApp com templates e QR Code
-- [x] Sistema de Notificacoes automaticas
-- [x] Configuracoes de perfil e senha
-- [ ] App mobile (React Native)
-- [ ] Relatorios financeiros em PDF/Excel
-- [ ] Agendamento de mensagens automaticas
-- [ ] Modulo de competicoes e eventos
+- [x] 📊 Dashboard profissional com KPIs, agenda semanal e graficos financeiros
+- [x] 👥 CRUD completo de Alunos, Turmas e Modalidades
+- [x] 💳 Controle de Mensalidades com geracao automatica por competencia
+- [x] 🧮 Mensalidade proporcional por aulas realizadas/programadas
+- [x] 🔁 Aluno em multiplas turmas com mensalidade conjunta
+- [x] ✅ Registro de Presencas com presente, faltou e pendente
+- [x] 🩹 Controle de faltas para historico e reposicao
+- [x] 💸 Gestao de Gastos por categoria
+- [x] 🧑‍💼 Gestao de Funcionarios, cargos e salarios integrados aos gastos
+- [x] 📈 Tela de Analises com filtros avancados e graficos dinamicos
+- [x] ⚙️ Configuracoes gerais de valores e cargos
+- [x] 👤 Perfil separado de Configuracoes
+- [x] 💬 Integracao WhatsApp com templates e QR Code
+- [x] 🔔 Sistema de Notificacoes automaticas
+- [ ] 📱 App mobile (React Native)
+- [ ] 📄 Relatorios financeiros em PDF/Excel
+- [ ] ⏰ Agendamento de mensagens automaticas
+- [ ] 🏆 Modulo de competicoes e eventos
 
 ---
 

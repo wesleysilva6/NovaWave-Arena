@@ -13,7 +13,7 @@ SELECT
         FROM mensalidade mn
         JOIN aluno a ON a.idaluno = mn.aluno_id
         WHERE mn.situacao = 1
-          AND date_trunc('month', mn.data_pagamento) = m.mes
+          AND mn.mes_referencia = TO_CHAR(m.mes, 'YYYY-MM')
           AND (:modalidade_id = 0 OR a.modalidade_id = :modalidade_id)
           AND (:aluno_situacao = -1 OR a.situacao = :aluno_situacao)
     ), 0) AS receita,

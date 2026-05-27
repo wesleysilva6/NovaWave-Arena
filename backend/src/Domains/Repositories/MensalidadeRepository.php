@@ -19,6 +19,7 @@ class MensalidadeRepository
     public static function listar(): array
     {
         Database::switchParams([], 'mensalidade/atualizar_vencidas', true);
+        Database::switchParams([], 'mensalidade/remover_zeradas_sem_pagamento', true);
         $res = Database::switchParams([], 'mensalidade/listar', true);
         return self::getArrayResult($res);
     }

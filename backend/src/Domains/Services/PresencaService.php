@@ -15,8 +15,9 @@ class PresencaService
      */
     public static function listarTurmasComPresencas(): array
     {
-        $hoje    = new \DateTime();
-        $inicio  = $hoje->format('Y-m-d');
+        $hoje    = new \DateTime('now', new \DateTimeZone('America/Sao_Paulo'));
+        $hojeStr = $hoje->format('Y-m-d');
+        $inicio  = (clone $hoje)->modify('-30 days')->format('Y-m-d');
         $fim     = (clone $hoje)->modify('+7 days')->format('Y-m-d');
 
         // Busca turmas ativas reutilizando o SQL existente
@@ -47,6 +48,12 @@ class PresencaService
 
             // Busca todas as presenças da janela
             $presencas = PresencaRepository::listar($turmaId, $inicio, $fim);
+            $presencas = array_values(array_filter($presencas, function ($presenca) use ($hojeStr) {
+                $dataTreino = (string)($presenca['data_treino'] ?? '');
+                $situacao = (int)($presenca['situacao'] ?? 0);
+
+                return $dataTreino >= $hojeStr || $situacao === 0;
+            }));
 
             $resultado[] = array_merge($turma, ['presencas' => $presencas]);
         }
@@ -56,6 +63,10 @@ class PresencaService
 
     public static function marcar(int $idpresenca, int $situacao): array
     {
+        if (!in_array($situacao, [0, 1, 2], true)) {
+            throw new \InvalidArgumentException('Situacao de presenca invalida.');
+        }
+
         return PresencaRepository::marcar($idpresenca, $situacao);
     }
 

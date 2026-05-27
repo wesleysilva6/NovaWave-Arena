@@ -21,7 +21,7 @@ export default function KpiCards({ stats, loading }: Props) {
   const cards = [
     { label: 'Alunos ativos', value: stats.total_alunos, sub: `+${stats.novos_alunos_mes} no mes`, icon: FiUsers, color: 'brand.500', bg: 'brand.50' },
     { label: 'Aulas hoje', value: stats.treinos_hoje, sub: 'agenda do dia', icon: FiCalendar, color: 'green.500', bg: 'green.50' },
-    { label: 'Receita', value: formatCurrency(stats.receita_mes), sub: 'pagamentos no mes', icon: FiDollarSign, color: 'teal.500', bg: 'teal.50' },
+    { label: 'Receita', value: formatCurrency(stats.receita_mes), sub: 'competencia do mes', icon: FiDollarSign, color: 'teal.500', bg: 'teal.50' },
     { label: 'Despesas', value: formatCurrency(stats.gastos_mes), sub: 'gastos no mes', icon: FiTrendingDown, color: 'red.500', bg: 'red.50' },
     { label: 'Resultado', value: formatCurrency(resultado), sub: resultado >= 0 ? 'saldo positivo' : 'saldo negativo', icon: FiTrendingUp, color: resultado >= 0 ? 'cyan.500' : 'red.500', bg: resultado >= 0 ? 'cyan.50' : 'red.50' },
     { label: 'A vencer', value: stats.vencimentos_proximos, sub: 'proximos 7 dias', icon: FiAlertTriangle, color: 'orange.500', bg: 'orange.50' },

@@ -65,7 +65,14 @@ class Database
 
             $stmt = $pdo->prepare($sql);
 
+            preg_match_all('/(?<!:):([a-zA-Z_][a-zA-Z0-9_]*)/', $sql, $matches);
+            $sqlParams = array_flip($matches[1] ?? []);
+
             foreach ($params as $nome => $valor) {
+                if (!isset($sqlParams[$nome])) {
+                    continue;
+                }
+
                 $tipo = is_int($valor)
                     ? PDO::PARAM_INT
                     : PDO::PARAM_STR;

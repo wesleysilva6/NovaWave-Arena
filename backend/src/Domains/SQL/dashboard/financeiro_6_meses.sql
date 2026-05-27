@@ -12,7 +12,7 @@ SELECT
         SELECT SUM(mn.valor)
         FROM mensalidade mn
         WHERE mn.situacao = 1
-          AND date_trunc('month', mn.data_pagamento) = m.mes
+          AND mn.mes_referencia = TO_CHAR(m.mes, 'YYYY-MM')
     ), 0) AS receita,
     COALESCE((
         SELECT SUM(g.valor)

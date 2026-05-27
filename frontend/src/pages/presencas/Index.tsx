@@ -37,7 +37,7 @@ export default function PresencasPage() {
       setTurmas(data)
     } catch (err: any) {
       toast({
-        title: 'Erro ao carregar presenças',
+        title: 'Erro ao carregar presencas',
         description: err.message,
         status: 'error',
         duration: 4000,
@@ -52,32 +52,33 @@ export default function PresencasPage() {
     carregarDados()
   }, [carregarDados])
 
-  /** Atualiza o estado local de forma otimista e chama a API */
   async function handleMarcar(idpresenca: number, situacao: number) {
-    // Optimistic update
+    let situacaoAnterior = 0
+
     setTurmas((prev) =>
       prev.map((t) => ({
         ...t,
-        presencas: t.presencas.map((p: Presenca) =>
-          p.idpresenca === idpresenca ? { ...p, situacao } : p
-        ),
+        presencas: t.presencas.map((p: Presenca) => {
+          if (p.idpresenca !== idpresenca) return p
+          situacaoAnterior = p.situacao
+          return { ...p, situacao }
+        }),
       }))
     )
 
     try {
       await marcarPresenca(idpresenca, situacao)
     } catch (err: any) {
-      // Reverte em caso de erro
       setTurmas((prev) =>
         prev.map((t) => ({
           ...t,
           presencas: t.presencas.map((p: Presenca) =>
-            p.idpresenca === idpresenca ? { ...p, situacao: situacao === 1 ? 0 : 1 } : p
+            p.idpresenca === idpresenca ? { ...p, situacao: situacaoAnterior } : p
           ),
         }))
       )
       toast({
-        title: 'Erro ao marcar presença',
+        title: 'Erro ao marcar presenca',
         description: err.message,
         status: 'error',
         duration: 3000,
@@ -96,7 +97,6 @@ export default function PresencasPage() {
 
   return (
     <Box p={{ base: 4, md: 6, lg: 8 }} maxW="1200px" w="full" mx="auto">
-      {/* Header */}
       <Flex align="center" gap={3} mb={6}>
         <Flex
           w={10}
@@ -111,15 +111,14 @@ export default function PresencasPage() {
         </Flex>
         <Box>
           <Text fontSize="xl" fontWeight="800" color="gray.800" lineHeight="1.2">
-            Gestão de Presenças
+            Gestao de Presencas
           </Text>
           <Text fontSize="sm" color="gray.400">
-            Marque a presença dos alunos por turma. As próximas aulas são geradas automaticamente.
+            Resolva presencas pendentes, confirme alunos presentes e registre faltas para reposicao.
           </Text>
         </Box>
       </Flex>
 
-      {/* Toolbar */}
       <Flex
         bg="white"
         rounded="2xl"
@@ -160,7 +159,6 @@ export default function PresencasPage() {
         </Tooltip>
       </Flex>
 
-      {/* Lista de turmas */}
       {loading ? (
         <VStack spacing={3} align="stretch">
           {[1, 2, 3].map((i) => (
@@ -195,10 +193,9 @@ export default function PresencasPage() {
         </Accordion>
       )}
 
-      {/* Rodapé */}
       {!loading && filtered.length > 0 && (
         <Text fontSize="xs" color="gray.400" textAlign="center" mt={4}>
-          {filtered.length} turma{filtered.length !== 1 ? 's' : ''} · presenças de hoje até os próximos 7 dias
+          {filtered.length} turma{filtered.length !== 1 ? 's' : ''} - pendencias dos ultimos 30 dias e proximas aulas
         </Text>
       )}
     </Box>
